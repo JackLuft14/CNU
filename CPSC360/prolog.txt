@@ -1,0 +1,30 @@
+appending(C,[],C).
+appending([B|X],[B|TB],C) :- appending(X,TB,C).
+
+reverse([],[]).
+reverse(R,[H|T]) :-  reverse(X,T), appending(R,X,[H]).
+
+palindrome([]).
+palindrome(A) :- reverse(A,A).
+
+range(A,B,C) :- D is B+1, ((C<D, A=[]) ; (C=D, A=[B]) ; 
+                          (D<C, range(X,D,C), appending(A,[B],X))).
+
+modzero([],_,[]).
+modzero(A,B,[H|T]) :-  modzero(X,B,T),
+    				   (0 is mod(B,H)-> appending(A,[H],X); appending(A,[],X)).
+
+factors(A,B) :- range(X,2,B), modzero(A,B,X).
+
+prime(A) :- A>1, factors([],A).
+
+memberof(A,[H|T]) :- A=H; memberof(A,T).
+order(A) :- memberof(A,[1,2,3,4,5]).
+
+visit(B,C,D,E,F) :-
+    order(B), (B=1;B=5),
+    order(C), C=4,
+    order(D), D\=4, D\=5,
+    order(F), F\=3,
+    order(E), E is F+2,
+    list_to_set([B,C,D,E,F],Z), Z=[B,C,D,E,F].
